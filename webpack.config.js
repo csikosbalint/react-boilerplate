@@ -41,10 +41,11 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html"
+      template: "./root/index.html"
     }),
     new CopyWebpackPlugin([
-      { from: 'static' }
+      { from: 'root' },
+      { from: 'assets', to: 'assets' }
     ])
   ],
   resolve: {
