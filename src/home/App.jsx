@@ -1,6 +1,7 @@
 import React from 'react';
-import * as AWS from 'aws-sdk';
-
+import AWS from 'aws-sdk/global';
+// import CognitoIdentityCredentials from 'aws-sdk/lib/credentials/cognito_identity_credentials';
+import CognitoIdentityServiceProvider from 'aws-sdk/clients/cognitoidentityserviceprovider';
 import './App.css';
 
 export default class App extends React.Component {
@@ -41,7 +42,7 @@ export default class App extends React.Component {
           PASSWORD: 'Macska88',
         },
       };
-      const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+      const cognitoidentityserviceprovider = new CognitoIdentityServiceProvider();
 
       cognitoidentityserviceprovider.initiateAuth(params, (err, data) => {
         if (err) {
