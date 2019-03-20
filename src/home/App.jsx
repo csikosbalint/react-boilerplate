@@ -1,10 +1,12 @@
 import React from 'react';
 import AWS from 'aws-sdk/global';
-// import CognitoIdentityCredentials from 'aws-sdk/lib/credentials/cognito_identity_credentials';
 import CognitoIdentityServiceProvider from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import STS from 'aws-sdk/clients/sts';
 import './App.css';
 
 export default class App extends React.Component {
+  username = 'balint';
+
   region = 'us-east-1';
 
   identityPool = 'us-east-1:68c84c7d-8a96-4772-bcf2-caab494862c6';
@@ -38,7 +40,7 @@ export default class App extends React.Component {
         AuthFlow: 'USER_PASSWORD_AUTH', /* required */
         ClientId: this.clientId, /* required */
         AuthParameters: {
-          USERNAME: 'balint',
+          USERNAME: this.username,
           PASSWORD: 'Macska88',
         },
       };
@@ -60,8 +62,46 @@ export default class App extends React.Component {
 
           AWS.config.credentials = new AWS.CognitoIdentityCredentials(cognitoParams);
           AWS.config.getCredentials(() => {
+            console.log(AWS.config.credentials);
             this.setState(state => ({ ...state, message: AWS.config.credentials.accessKeyId }));
-            resolve(AWS.config.credentials.accessKeyId);
+
+            const sts = new STS();
+
+            const pa = {
+              RoleArn: 'arn:aws:iam::327953370525:role/Clinician',
+              RoleSessionName: this.username,
+            };
+            sts.assumeRole(pa, (er, da) => {
+              if (er) {
+                console.log(er, er.stack); // an error occurred
+              } else {
+                console.log(da); // successful response
+                AWS.config.credentials = new AWS.Credentials({
+                  accessKeyId: da.Credentials.AccessKeyId,
+                  secretAccessKey: da.Credentials.SecretAccessKey,
+                  sessionToken: da.Credentials.SessionToken,
+                });
+                this.setState(state => ({ ...state, message: AWS.config.credentials.accessKeyId }));
+
+                resolve(AWS.config.credentials.accessKeyId);
+
+                /*
+                 data = {
+                  AssumedRoleUser: {
+                   Arn: "arn:aws:sts::123456789012:assumed-role/demo/Bob",
+                   AssumedRoleId: "ARO123EXAMPLE123:Bob"
+                  },
+                  Credentials: {
+                   AccessKeyId: "AKIAIOSFODNN7EXAMPLE",
+                   Expiration: <Date Representation>,
+                   SecretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+                   SessionToken: ""
+                  },
+                  PackedPolicySize: 6
+                 }
+                 */
+              }
+            });
           });
         }
       });
