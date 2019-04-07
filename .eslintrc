@@ -7,11 +7,21 @@
       "jsx": true
     }
   },
+  "env": {
+    "browser": true,
+    "node": true
+  },
   "plugins": [
-    "react"
+    "react",
+    "react-hooks",
+    "fetch"
   ],
   "rules": {
-    "no-console": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/prop-types": "warn",
+    "no-nested-ternary": "warn",
+    "no-console": "warn",
     "no-unused-vars": "warn",
     "indent": [
       "error",
@@ -19,7 +29,9 @@
     ]
   },
   "extends": [
-    "airbnb-base"
+    "airbnb-base",
+    "plugin:fetch/recommended",
+    "plugin:react/recommended"
   ],
   "settings": {
     "react": {
