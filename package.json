@@ -67,14 +67,16 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 50,
-        "functions": 50,
-        "lines": 50,
-        "statements": 50
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
       },
-      "./src/**/*.{js,jsx}": {
+      "./src/__common__/*.{js,jsx}": {
+        "statements": 100,
         "branches": 50,
-        "statements": 40
+        "functions": 100,
+        "lines": 100
       }
     }
   }
