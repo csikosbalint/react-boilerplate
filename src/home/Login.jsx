@@ -47,7 +47,7 @@ const styles = theme => ({
 
 function SignIn(props) {
   const { classes } = props;
-  const cognitoUrl = (clientId, redirectUri, state) => `https://quicksight-users.auth.us-east-1.amazoncognito.com/login?redirect_uri=${encodeURI(redirectUri)}&response_type=token&client_id=${clientId}&state=${btoa(state)}&scope=openid`;
+  const cognitoUrl = (clientId, redirectUri, state) => `https://katauserpoolja.auth.eu-west-1.amazoncognito.com/login?redirect_uri=${encodeURI(redirectUri)}&response_type=token&client_id=${clientId}&state=${btoa(state)}&scope=openid`;
 
   return (
     <main className={classes.main}>

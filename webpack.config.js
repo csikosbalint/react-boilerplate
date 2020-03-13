@@ -9,7 +9,6 @@ module.exports = {
   entry: {
     index: './src/index.js',
     react: './node_modules/react',
-    app: './src/home/App.jsx',
     reactdom: './node_modules/react-dom',
     awssdkglobal: './node_modules/aws-sdk/global',
     cognitoidp: './node_modules/aws-sdk/clients/cognitoidentityserviceprovider',

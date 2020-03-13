@@ -32,9 +32,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   }
   return (
     <Route {...rest} render={props => (
-      fakeAuth.isAuthenticated()
-        ? <Component {...props} />
-        : <Redirect to='/login' />
+      fakeAuth.isAuthenticated() ? <Component {...props} /> : <Redirect to='/login' />
     )} />
   );
 };
@@ -44,7 +42,7 @@ PrivateRoute.propTypes = {
 };
 
 function App() {
-  localStorage.setItem('clientId', '7bfceo9l2gpcl6l5915mt14h5j');
+  localStorage.setItem('clientId', '77mmvqhkl2g7oqkfao9pgslg48');
   return (
     <Router>
       <Switch>
