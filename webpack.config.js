@@ -1,9 +1,9 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 const SriPlugin = require('webpack-subresource-integrity');
-var Visualizer = require('webpack-visualizer-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 
 module.exports = {
   entry: {
@@ -22,9 +22,9 @@ module.exports = {
   devtool: 'inline-source-map',
   optimization: {
     splitChunks: {
-      // This indicates which chunks will be selected for optimization. 
-      // When a string is provided, valid values are all, async, and 
-      // initial. Providing all can be particularly powerful, because it 
+      // This indicates which chunks will be selected for optimization.
+      // When a string is provided, valid values are all, async, and
+      // initial. Providing all can be particularly powerful, because it
       // means that chunks can be shared even between async and non-async
       // chunks.
       chunks: 'all',
@@ -38,14 +38,14 @@ module.exports = {
       cacheGroups: {
         vendors: {
           test: /[\\/]node_modules[\\/]/,
-          priority: -10
+          priority: -10,
         },
         default: {
           minChunks: 2,
           priority: -20,
-          reuseExistingChunk: true
-        }
-      }
+          reuseExistingChunk: true,
+        },
+      },
     },
     minimizer: [
       // we specify a custom UglifyJsPlugin here to get source maps in production
@@ -55,20 +55,18 @@ module.exports = {
         uglifyOptions: {
           compress: false,
           ecma: 6,
-          mangle: true
+          mangle: true,
         },
-        sourceMap: !process.env.npm_lifecycle_script.includes('production')
-      })
-    ]
+        sourceMap: !process.env.npm_lifecycle_script.includes('production'),
+      }),
+    ],
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
-        use: [
-          'babel-loader'
-        ]
+        use: ['babel-loader'],
       },
       {
         test: /\.jsx?$/,
@@ -78,46 +76,38 @@ module.exports = {
           {
             loader: 'eslint-loader',
             options: {
-              fix: true
-            }
-          }
+              fix: true,
+            },
+          },
         ],
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.json$/,
         exclude: /(node_modules)/,
-        use: [
-          'json-loader'
-        ]
-      }
-    ]
+        use: ['json-loader'],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './root/index.html',
-      inject: true
+      inject: true,
     }),
-    new CopyWebpackPlugin([
-      { from: 'root' },
-      { from: 'assets', to: 'assets' }
-    ]),
+    // new CopyWebpackPlugin([{ from: 'root' }, { from: 'assets', to: 'assets' }]),
     new SriPlugin({
       hashFuncNames: ['sha256', 'sha384'],
       enabled: process.env.npm_lifecycle_script.includes('production'),
     }),
     new Visualizer({
       filename: './statistics.html',
-      enabled: false
-    })
+      enabled: false,
+    }),
   ],
   resolve: {
-    extensions: ['.js', '.jsx', '.json']
-  }
+    extensions: ['.js', '.jsx', '.json'],
+  },
 };
