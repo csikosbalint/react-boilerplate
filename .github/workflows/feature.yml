@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo bumpTemplate && exit 0
-      - run: echo applyVersionChange feature
-      - run: echo commitVersionChange feature
+      - id: checkVersion
+        run: echo "::set-output name=VAR1::okay"
+      - name: this should not run
+        if: steps.step1.outputs.VAR1 == 'Lucy'
+        run: echo "This should not run"
+      - name: this should run
+        if: steps.step1.outputs.VAR1 == 'okay'
+        run: echo "This should not run"
