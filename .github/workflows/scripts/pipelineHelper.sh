@@ -12,7 +12,7 @@ function calculateVersion {
     case "$1" in
         master)
             AVER="$(git show HEAD:package.json | grep -e '"version":' | cut -d: -f2 | sed -e 's/"//g' -e 's/,//' | xargs)"
-            PVER="$(git show HEAD~1:package.json | grep -e '"version":' | cut -d: -f2 | sed -e 's/"//g' -e 's/,//' | xargs)"
+            PVER="$(git show HEAD^:package.json | grep -e '"version":' | cut -d: -f2 | sed -e 's/"//g' -e 's/,//' | xargs)"
             NVER="$(pipelineVersioning getNextVersion $AVER $PVER)"
             if ! ( echo "$NVER" | grep -Eo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}' );then
                 echo "FIX VERSION!"
