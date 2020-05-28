@@ -8,15 +8,13 @@ on:
 
 jobs:
   build:
-    # if: "!contains(github.event.commits[0].message, '[skip ci]')"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - name: Test and Build
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: '12.x'
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
