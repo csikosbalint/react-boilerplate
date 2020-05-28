@@ -31,4 +31,4 @@ jobs:
           source .github/workflows/scripts/pipelineHelper.sh
           commitVersionChange master || exit 1
       - name: Build and Test
-        run: echo "Version was not touched. Proceeding with normal build."
+        run: echo "Proceeding with normal build."
