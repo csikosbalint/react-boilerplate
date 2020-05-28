@@ -1,6 +1,6 @@
 module.exports.changeVersionToPackageJSON = (nextVersion) => {
   var fs = require('fs');
-  fs.readFile(process.env.CLONE_DIR + 'package.json', (error, data) => {
+  fs.readFile(process.env.CLONE_DIR + '/package.json', (error, data) => {
     if (error) {
       console.log(error);
       process.exit(-1);
