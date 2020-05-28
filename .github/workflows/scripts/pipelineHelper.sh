@@ -49,7 +49,8 @@ function applyVersionChange {
         master)
             if [ "$NVER" != "$AVER" ]; then
                 pipelineVersioning changeVersionToPackageJSON $NVER || return -1
-                MODIFIED="package.json"
+                export MODIFIED="package.json"
+                # temp workaround for BitBucket 2 steps
                 echo -e "AVER=$AVER\nNVER=$NVER\nMODIFIED=package.json\n" > pass_env.sh
             fi
         ;;
@@ -63,7 +64,6 @@ function applyVersionChange {
 }
 
 function commitVersionChange {
-    source pass_env.sh && rm pass_env.sh
     case "$1" in
         master)
             if [ "$NVER" != "$AVER" ]; then
