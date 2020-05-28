@@ -18,11 +18,10 @@ jobs:
       - run: ls -la
       - id: checkVersion
         name: Check Versioning
-        run: source .github/workflows/scripts/pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature && echo "::set-output name=BUMPED::true" || exit 1
-      - run: cat package.json
+        run: source .github/workflows/scripts/pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature || exit 1
       - name: this should only run if version is adjusted
-        if: steps.step1.outputs.BUMPED == 'true'
-        run: echo "commitVersionChange feature || exit 1"
+        if: steps.step1.outputs.applyVersionChange == 'true'
+        run: cat package.json
       - name: this should run if version was okay
-        if: steps.step1.outputs.BUMPED != 'true'
-        run: echo "This should not run"
+        if: steps.step1.outputs.applyVersionChange != 'true'
+        run: echo "Version was not touched. Proceeding with normal build."

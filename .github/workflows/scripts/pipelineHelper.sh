@@ -54,7 +54,7 @@ function applyVersionChange {
             fi
         ;;
         feature|hotfix|bugfix)
-            pipelineVersioning changeVersionToPackageJSON $NVER && MODIFIED="${MODIFIED} package.json" || return -1
+            pipelineVersioning changeVersionToPackageJSON $NVER && MODIFIED="${MODIFIED} package.json" && echo "::set-output name=applyVersionChange::true" || return -1
         ;;
         *)
             echo "MISSING/WRONG/UNSUPPORTED PARAM: $@" && return -1
