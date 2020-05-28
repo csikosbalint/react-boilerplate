@@ -7,14 +7,28 @@ on:
       - 'feature/**'
 
 jobs:
-  build:
+  feature_build:
+    name: Feature Pipeline
+    # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#about-contexts-and-expressions
+    if: "!contains(github.event.commits[0].message, '[skip ci]')"
     runs-on: ubuntu-latest
 
     steps:
+      - run: export
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+      - id: checkVersion
+        name: Check Version
+        run: |
+          source .github/workflows/scripts/pipelineHelper.sh
+          calculateVersion feature || exit 1
+          applyVersionChange feature || exit 1
+      - name: Commit Version
+        if: steps.checkVersion.outputs.applyVersionChange == 'true'
+        run: |
+          git config --global user.name "${GITHUB_RUN_ID}"
+          git config --global user.email "githubci@noreply.github.com"
+          source .github/workflows/scripts/pipelineHelper.sh
+          commitVersionChange feature || exit 1
+      - name: Build and Test
+        if: steps.checkVersion.outputs.applyVersionChange != 'true'
+        run: echo "Version was not touched. Proceeding with normal build."
