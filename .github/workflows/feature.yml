@@ -20,8 +20,8 @@ jobs:
         name: Check Versioning
         run: source .github/workflows/scripts/pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature || exit 1
       - name: this should only run if version is adjusted
-        if: steps.step1.outputs.applyVersionChange == 'true'
+        if: steps.checkVersion.outputs.applyVersionChange == 'true'
         run: cat package.json
       - name: this should run if version was okay
-        if: steps.step1.outputs.applyVersionChange != 'true'
+        if: steps.checkVersion.outputs.applyVersionChange != 'true'
         run: echo "Version was not touched. Proceeding with normal build."
