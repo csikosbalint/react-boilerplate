@@ -12,6 +12,9 @@ function pipelineVersioning {
 function calculateVersion {
     case "$1" in
         master)
+            git version
+            git checkout master
+            git show HEAD~1:package.json
             AVER="$(git show HEAD:package.json | grep -e '"version":' | cut -d: -f2 | sed -e 's/"//g' -e 's/,//' | xargs)"
             PVER="$(git show HEAD~1:package.json | grep -e '"version":' | cut -d: -f2 | sed -e 's/"//g' -e 's/,//' | xargs)"
             NVER="$(pipelineVersioning getNextVersion $AVER $PVER)"
