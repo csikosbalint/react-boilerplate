@@ -16,16 +16,16 @@ jobs:
     steps:
       - run: export
       - uses: actions/checkout@v2
-      - run: |
-        git config --global user.name 'GitHubCI'
-        git config --global user.email 'githubci@noreply.github.com'
-      - run: ls -la
       - id: checkVersion
         name: Check Version
         run: |
           source .github/workflows/scripts/pipelineHelper.sh
           calculateVersion feature || exit 1
           applyVersionChange feature || exit 1
+      - name: Setup git user
+        run: |
+        git config --global user.name "${GITHUB_RUN_ID}"
+        git config --global user.email 'githubci@noreply.github.com'
       - name: Commit Version
         if: steps.checkVersion.outputs.applyVersionChange == 'true'
         run: |
