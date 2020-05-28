@@ -51,21 +51,22 @@ function applyVersionChange {
                 pipelineVersioning changeVersionToPackageJSON $NVER || return -1
                 export MODIFIED="package.json"
                 # temp workaround for BitBucket 2 steps
-                echo -e "AVER=$AVER\nNVER=$NVER\nMODIFIED=package.json\n" > pass_env.sh
             fi
         ;;
         feature|hotfix|bugfix)
             pipelineVersioning changeVersionToPackageJSON $NVER || return -1
-            export MODIFIED="package.json"
             echo "::set-output name=applyVersionChange::true" || return -1
         ;;
         *)
             echo "MISSING/WRONG/UNSUPPORTED PARAM: $@" && return -1
         ;;
     esac
+    echo -e "AVER=$AVER\nNVER=$NVER\nMODIFIED=package.json\n" > pass_env.sh
 }
 
 function commitVersionChange {
+    set -x
+    test -f pass_env.sh && source pass_env.sh
     case "$1" in
         master)
             if [ "$NVER" != "$AVER" ]; then
