@@ -49,8 +49,7 @@ function applyVersionChange {
         master)
             if [ "$NVER" != "$AVER" ]; then
                 pipelineVersioning changeVersionToPackageJSON $NVER || return -1
-                export MODIFIED="package.json"
-                # temp workaround for BitBucket 2 steps
+                echo "::set-output name=applyVersionChange::true" || return -1
             fi
         ;;
         feature|hotfix|bugfix)
@@ -71,10 +70,9 @@ function commitVersionChange {
         master)
             if [ "$NVER" != "$AVER" ]; then
                 git checkout master
-                git status
                 git add $MODIFIED
                 git commit --amend --no-edit
-                git push --force && exit 0 || return -1
+                git push --force || return -1
             fi
         ;;
         feature)

@@ -1,0 +1,32 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Main Pipeline
+    # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#about-contexts-and-expressions
+    if: "!contains(github.event.commits[0].message, '[skip ci]')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - id: checkVersion
+        name: Check Version
+        run: |
+          source .github/workflows/scripts/pipelineHelper.sh
+          calculateVersion master || exit 1
+          applyVersionChange master || exit 1
+      - name: Amend Version
+        if: steps.checkVersion.outputs.applyVersionChange == 'true'
+        run: |
+          git config --global user.name "${GITHUB_RUN_ID}"
+          git config --global user.email "githubci@noreply.github.com"
+          source .github/workflows/scripts/pipelineHelper.sh
+          commitVersionChange master || exit 1
+      - name: Build and Test
+        run: echo "Version was not touched. Proceeding with normal build."
