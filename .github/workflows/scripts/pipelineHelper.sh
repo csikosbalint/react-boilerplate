@@ -1,5 +1,10 @@
 set -x
+# BITBUCKET_CLONE_DIR | GITHUB_WORKSPACE
+CLONE_DIR=${GITHUB_WORKSPACE}
+# BITBUCKET_BRANCH | GITHUB_REF	 
+BRANCH=${GITHUB_REF}
 function pipelineVersioning {
+    return 0
     FUNC=$1
     ARGS="\"$(echo $@ | cut -d' ' -f2- | sed -e 's/ /", "/g')\""
     node -e "require('./.github/workflows/scripts/pipelineVersioning').$FUNC($ARGS)";
@@ -21,17 +26,17 @@ function calculateVersion {
         ;;
         feature)
             AVER="$(git show HEAD:package.json | grep -e '"version":' | cut -d: -f2 | sed -e 's/"//g' -e 's/,//' | xargs)"
-            NVER="$(echo $AVER | cut -d. -f1).F${BITBUCKET_BRANCH:8}.0"
+            NVER="$(echo $AVER | cut -d. -f1).F${BRANCH:8}.0"
             return 0
         ;;
         hotfix)
             AVER="$(git show HEAD:package.json | grep -e '"version":' | cut -d: -f2 | sed -e 's/"//g' -e 's/,//' | xargs)"
-            NVER="$(echo $AVER | cut -d. -f1).$(echo $AVER | cut -d. -f2).H${BITBUCKET_BRANCH:7}"
+            NVER="$(echo $AVER | cut -d. -f1).$(echo $AVER | cut -d. -f2).H${BRANCH:7}"
             return 0
         ;;
         bugfix)
             AVER="$(git show HEAD:package.json | grep -e '"version":' | cut -d: -f2 | sed -e 's/"//g' -e 's/,//' | xargs)"
-            NVER="$(echo $AVER | cut -d. -f1).$(echo $AVER | cut -d. -f2).B${BITBUCKET_BRANCH:7}"
+            NVER="$(echo $AVER | cut -d. -f1).$(echo $AVER | cut -d. -f2).B${BRANCH:7}"
             return 0
         ;;
         *)
@@ -47,8 +52,6 @@ function applyVersionChange {
                 pipelineVersioning changeVersionToPackageJSON $NVER || return -1
                 MODIFIED="package.json"
                 echo -e "AVER=$AVER\nNVER=$NVER\nMODIFIED=package.json\n" > pass_env.sh
-            else
-                sleep 5 # workaround BitBucket step condition limits and pause during deployment concurrency
             fi
         ;;
         feature|hotfix|bugfix)

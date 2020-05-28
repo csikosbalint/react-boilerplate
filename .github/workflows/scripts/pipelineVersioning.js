@@ -1,19 +1,24 @@
 module.exports.changeVersionToPackageJSON = (nextVersion) => {
   var fs = require('fs');
-  fs.readFile(process.env.BITBUCKET_CLONE_DIR + '/package.json', (error, data) => {
+  fs.readFile(process.env.CLONE_DIR + 'package.json', (error, data) => {
     if (error) {
       console.log(error);
-      process.exit(-1)
+      process.exit(-1);
     } else {
       var p = JSON.parse(data);
       p.version = nextVersion;
       console.log('"' + p.name + '": "' + p.version + '",');
-      fs.writeFile(process.env.BITBUCKET_CLONE_DIR + '/package.json', JSON.stringify(p, null, 2), 'utf8', (err, dat) => {
-        if (err) {
-          console.log(err);
-          process.exit(-1)
+      fs.writeFile(
+        process.env.CLONE_DIR + '/package.json',
+        JSON.stringify(p, null, 2),
+        'utf8',
+        (err, dat) => {
+          if (err) {
+            console.log(err);
+            process.exit(-1);
+          }
         }
-      });
+      );
     }
   });
 };
@@ -35,9 +40,9 @@ module.exports.getNextVersion = (actualVersion, prevVersion) => {
   var ret = actualVersion.match(/^[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}$/gm)
     ? actualVersion
     : increasePrevious(actualVersion, prevVersion);
-  if ( ret.match(/^[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}$/gm) ) {
+  if (ret.match(/^[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}$/gm)) {
     console.log(ret);
   } else {
-    console.log("Error: " + ret)
+    console.log('Error: ' + ret);
   }
 };
