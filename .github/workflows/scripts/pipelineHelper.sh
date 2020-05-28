@@ -63,6 +63,7 @@ function applyVersionChange {
 }
 
 function commitVersionChange {
+    set -x
     case "$1" in
         master)
             if [ "$NVER" != "$AVER" ]; then
