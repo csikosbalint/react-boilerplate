@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - echo calculateVersion feature
-      - echo applyVersionChange feature
-      - echo commitVersionChange feature
+      - run: echo calculateVersion feature
+      - run: echo applyVersionChange feature
+      - run: echo commitVersionChange feature
   skipped:
     if: steps.versioning.outcome == skipped
     runs-on: ubuntu-latest
