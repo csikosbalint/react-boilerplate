@@ -17,7 +17,7 @@ jobs:
       - run: echo applyVersionChange feature
       - run: echo commitVersionChange feature
   skipped:
-    if: steps.versioning.outcome == 'skipped'
+    if: "!contains(steps.versioning.outcome, 'skipped')"
     runs-on: ubuntu-latest
 
     steps:
