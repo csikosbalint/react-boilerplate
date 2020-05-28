@@ -1,10 +1,8 @@
-set -x
 # BITBUCKET_CLONE_DIR | GITHUB_WORKSPACE
 CLONE_DIR=${GITHUB_WORKSPACE}
 # BITBUCKET_BRANCH:feature/first | GITHUB_REF:refs/heads/feature/first
 BRANCH="$(echo $GITHUB_REF | awk 'BEGIN{FS="/"} {print $(NF-1)"/"$NF}')"
 function pipelineVersioning {
-    return 0
     FUNC=$1
     ARGS="\"$(echo $@ | cut -d' ' -f2- | sed -e 's/ /", "/g')\""
     node -e "require('./.github/workflows/scripts/pipelineVersioning').$FUNC($ARGS)";

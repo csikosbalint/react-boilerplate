@@ -18,7 +18,7 @@ jobs:
       - run: ls -la
       - id: checkVersion
         name: Check Versioning
-        run: source .github/workflows/scripts/pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature && echo "::set-output name=VAR1::okay" || exit 1
+        run: source .github/workflows/scripts/pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature && echo "::set-output name=BUMPED::true" || exit 1
       - name: this should only run if version is adjusted
         if: steps.step1.outputs.VAR1 == 'Lucy'
         run: echo "commitVersionChange feature || exit 1"
