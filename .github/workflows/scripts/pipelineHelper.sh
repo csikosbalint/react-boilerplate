@@ -63,7 +63,7 @@ function applyVersionChange {
 }
 
 function commitVersionChange {
-    set -x
+    source pass_env.sh && rm pass_env.sh
     case "$1" in
         master)
             if [ "$NVER" != "$AVER" ]; then
