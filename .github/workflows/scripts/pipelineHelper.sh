@@ -1,6 +1,5 @@
 set -x
 function pipelineVersioning {
-    console.log(cwd());
     FUNC=$1
     ARGS="\"$(echo $@ | cut -d' ' -f2- | sed -e 's/ /", "/g')\""
     node -e "require('./.github/workflows/scripts/pipelineVersioning').$FUNC($ARGS)";
