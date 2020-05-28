@@ -22,13 +22,11 @@ jobs:
           source .github/workflows/scripts/pipelineHelper.sh
           calculateVersion feature || exit 1
           applyVersionChange feature || exit 1
-      - name: Setup git user
-        run: |
-        git config --global user.name "${GITHUB_RUN_ID}"
-        git config --global user.email 'githubci@noreply.github.com'
       - name: Commit Version
         if: steps.checkVersion.outputs.applyVersionChange == 'true'
         run: |
+          git config --global user.name "${GITHUB_RUN_ID}"
+          git config --global user.email "githubci@noreply.github.com"
           source .github/workflows/scripts/pipelineHelper.sh
           commitVersionChange feature || exit 1
       - name: Build and Test
