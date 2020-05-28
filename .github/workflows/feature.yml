@@ -13,12 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo calculateVersion feature
+      - run: echo bumpTemplate && exit 0
       - run: echo applyVersionChange feature
       - run: echo commitVersionChange feature
-  skipped:
-    if: "!contains(steps.versioning.outcome, 'skipped')"
-    runs-on: ubuntu-latest
-
-    steps:
-      - run: echo skipped
