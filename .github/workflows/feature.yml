@@ -7,8 +7,14 @@ on:
       - 'feature/**'
 
 jobs:
-  build:
+  versioning:
+    # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#about-contexts-and-expressions
     if: "!contains(github.event.commits[0].message, '[skip ci]')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: grep version package.json
+  other:
     runs-on: ubuntu-latest
 
     steps:
