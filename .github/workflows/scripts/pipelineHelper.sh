@@ -1,3 +1,4 @@
+set -x
 # BITBUCKET_CLONE_DIR | GITHUB_WORKSPACE
 export CLONE_DIR="${GITHUB_WORKSPACE}"
 # BITBUCKET_BRANCH:feature/first | GITHUB_REF:refs/heads/feature/first
