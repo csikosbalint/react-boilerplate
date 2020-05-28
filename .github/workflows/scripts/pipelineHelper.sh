@@ -63,7 +63,6 @@ function applyVersionChange {
 }
 
 function commitVersionChange {
-    set -x
     test -f pass_env.sh && source pass_env.sh
     case "$1" in
         master)
