@@ -7,7 +7,8 @@ on:
       - 'feature/**'
 
 jobs:
-  versioning:
+  feature_build:
+    name: Feature Pipeline
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#about-contexts-and-expressions
     if: "!contains(github.event.commits[0].message, '[skip ci]')"
     runs-on: ubuntu-latest
@@ -17,11 +18,11 @@ jobs:
       - uses: actions/checkout@v2
       - run: ls -la
       - id: checkVersion
-        name: Check Versioning
+        name: Check Version
         run: source .github/workflows/scripts/pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature || exit 1
-      - name: this should only run if version is adjusted
+      - name: Commit Version
         if: steps.checkVersion.outputs.applyVersionChange == 'true'
-        run: cat package.json
-      - name: this should run if version was okay
+        run: source .github/workflows/scripts/pipelineHelper.sh;commitVersionChange feature || exit 1
+      - name: Build and Test
         if: steps.checkVersion.outputs.applyVersionChange != 'true'
         run: echo "Version was not touched. Proceeding with normal build."
