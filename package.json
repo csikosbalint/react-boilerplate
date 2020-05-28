@@ -1,7 +1,7 @@
 {
   "name": "react-manual-setup",
   "version": "1.Ffirst.0",
-  "description": "",
+  "description": "Desc",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --hot",
