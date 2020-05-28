@@ -13,11 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - run: pwd
+      - run: ls -la
       - id: checkVersion
-        run: echo "::set-output name=VAR1::okay"
-      - name: this should not run
+        run: source pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature && echo "::set-output name=VAR1::okay" || exit 1
+      - name: this should only run if version is adjusted
         if: steps.step1.outputs.VAR1 == 'Lucy'
-        run: echo "This should not run"
-      - name: this should run
+        run: echo "commitVersionChange feature || exit 1"
+      - name: this should run if version was okay
         if: steps.step1.outputs.VAR1 == 'okay'
         run: echo "This should not run"
