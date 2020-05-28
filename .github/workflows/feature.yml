@@ -13,10 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
       - run: pwd
       - run: ls -la
       - id: checkVersion
-        run: source pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature && echo "::set-output name=VAR1::okay" || exit 1
+        run: source .github/workflows/scripts/pipelineHelper.sh;calculateVersion feature || exit 1 && applyVersionChange feature && echo "::set-output name=VAR1::okay" || exit 1
       - name: this should only run if version is adjusted
         if: steps.step1.outputs.VAR1 == 'Lucy'
         run: echo "commitVersionChange feature || exit 1"
