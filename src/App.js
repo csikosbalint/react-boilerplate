@@ -1,25 +1,54 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
+import SignIn from './containers/SignIn';
+import Dashboard from './containers/Dashboard';
+
+const fakeAuth = {
+  isAuthenticated() {
+    if (window.localStorage.getItem('idToken')) {
+      return true;
+    }
+    return false;
+  },
+  authenticate(idToken, cb) {
+    window.localStorage.setItem('idToken', atob(idToken.split('.')[1]));
+    setTimeout(cb, 100); // fake async
+  },
+  signout(cb) {
+    window.localStorage.removeItem('idToken');
+    setTimeout(cb, 100); // fake async
+  },
+};
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const idToken = rest.computedMatch.params[0].split('=')[1];
+  if (idToken) {
+    fakeAuth.authenticate(idToken);
+    return <Redirect to="/home"></Redirect>;
+  }
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        fakeAuth.isAuthenticated() ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/signin" />
+        )
+      }
+    />
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/signin" render={() => <SignIn />} />
+        <PrivateRoute path="/*" component={() => <Dashboard />} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
