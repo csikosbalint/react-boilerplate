@@ -6,36 +6,44 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import InfoIcon from '@material-ui/icons/Info';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
 import Skeleton from '@material-ui/lab/Skeleton';
 
-import Carousel from 'react-material-ui-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+
 import {
   GridList,
-  Card,
-  CardMedia,
+  Paper,
   GridListTile,
   GridListTileBar,
 } from '@material-ui/core';
 
 import { Container, createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { fade, makeStyles } from '@material-ui/core/styles';
-
-const themeMuiContainer = createMuiTheme({
-  overrides: {
-    MuiContainer: {
-      root: {
-        // backgroundColor: 'lightblue',
-      },
-    },
-  },
-});
+import {
+  fade,
+  makeStyles,
+  responsiveFontSizes,
+  useTheme,
+} from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 export default function Main(props) {
-  const appBarStyles = makeStyles((theme) => ({
+  let themeMui = createMuiTheme({
+    overrides: {
+      MuiContainer: {
+        root: {
+          backgroundColor: 'lightblue',
+        },
+      },
+    },
+  });
+  themeMui = responsiveFontSizes(themeMui);
+  const getClasses = makeStyles((theme) => ({
     container: {
       flexGrow: 1,
       height: 'inherit',
@@ -47,16 +55,11 @@ export default function Main(props) {
     menuButton: {
       marginRight: theme.spacing(2),
     },
-    title: {
+    menuTitle: {
       display: 'none',
       [theme.breakpoints.up('sm')]: {
         display: 'block',
       },
-    },
-    // PAPER
-    paper: {
-      height: 140,
-      width: 200,
     },
     // SEARCH
     search: {
@@ -96,12 +99,15 @@ export default function Main(props) {
         width: '20ch',
       },
     },
-    // PRODS
-    media: {
-      height: 0,
-      paddingTop: '36.25%',
+    //  CAROUSEL
+    carousel: {
+      marginBottom: theme.spacing(2),
     },
     // RECOMMENDATION
+    recommRoot: {
+      padding: '1rem',
+      marginBottom: theme.spacing(2),
+    },
     gridRoot: {
       display: 'flex',
       flexWrap: 'wrap',
@@ -109,56 +115,71 @@ export default function Main(props) {
       overflow: 'hidden',
       backgroundColor: theme.palette.background.paper,
     },
-    gridList: {
+    recommList: {
       flexWrap: 'nowrap',
       // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
       transform: 'translateZ(0)',
     },
+    recommTileFrame: {
+      width: 'auto !important',
+    },
+    recommTile: {
+      width: '180px',
+      height: '180px',
+      [theme.breakpoints.down('xs')]: {
+        width: '120px',
+        height: '120px',
+      },
+    },
     gridTitle: {
       color: theme.palette.primary.light,
     },
-    titleBar: {
-      background:
-        'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+    // CATEGORIES
+    catRoot: {
+      padding: '1rem',
+      marginBottom: theme.spacing(2),
+    },
+    catTileFrame: {
+      justifyContent: 'space-around',
+      width: 'auto !important',
+    },
+    catTile: {
+      width: '180px',
+      height: '180px',
+      [theme.breakpoints.down('xs')]: {
+        width: '120px',
+        height: '120px',
+      },
     },
   }));
-  const classes = appBarStyles();
+  const classes = getClasses();
   const [loading, setLoading] = useState(true);
   setTimeout(() => {
     setLoading(false);
   }, 2000);
 
-  const tileData = [
-    {
-      img: 'https://via.placeholder.com/240x120.png?text=Recomm1',
-      title: 'Image',
-      author: 'author',
-    },
-    {
-      img: 'https://via.placeholder.com/240x120.png?text=Recomm2',
-      title: 'Image',
-      author: 'author',
-    },
-    {
-      img: 'https://via.placeholder.com/240x120.png?text=Recomm3',
-      title: 'Image',
-      author: 'author',
-    },
-    {
-      img: 'https://via.placeholder.com/240x120.png?text=Recomm4',
-      title: 'Image',
-      author: 'author',
-    },
-    {
-      img: 'https://via.placeholder.com/240x120.png?text=Recomm5',
-      title: 'Image',
-      author: 'author',
-    },
-  ];
+  let recommNo = 4.5;
+  let isSmall = false;
+  let recomms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  if (useMediaQuery(useTheme().breakpoints.down('md'))) {
+    recommNo = 3.5;
+    recomms = [1, 2, 3, 4, 5, 6, 7, 8];
+  }
+  if (useMediaQuery(useTheme().breakpoints.down('sm'))) {
+    recommNo = 2.5;
+    recomms = [1, 2, 3, 4, 5, 6];
+  }
+  if (useMediaQuery(useTheme().breakpoints.down('xs'))) {
+    isSmall = true;
+    recommNo = 1.5;
+    recomms = [1, 2, 3, 4];
+  }
+  let cats = [...recomms];
 
   return (
-    <ThemeProvider theme={themeMuiContainer}>
-      <Container maxWidth="md" className={classes.container}>
+    <ThemeProvider theme={themeMui}>
+      <Container maxWidth="lg" className={classes.container}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
             <IconButton
@@ -169,7 +190,7 @@ export default function Main(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" className={classes.menuTitle}>
               {loading ? <Skeleton width="50px" /> : 'News'}
             </Typography>
             <div className={classes.search}>
@@ -189,43 +210,111 @@ export default function Main(props) {
             <Button color="inherit">Login</Button>
           </Toolbar>
         </AppBar>
-        <Carousel navButtonsAlwaysVisible={true}>
-          <Card>
-            <CardMedia
-              className={classes.media}
-              image="https://via.placeholder.com/360x120.png?text=Promo1"
-              title="promo1"
-            />
-          </Card>
-          <Card>
-            <CardMedia
-              className={classes.media}
-              image="https://via.placeholder.com/360x120.png?text=Promo2"
-              title="promo"
-            />
-          </Card>
+        <Carousel
+          className={classes.carousel}
+          showThumbs={false}
+          showStatus={false}
+          autoPlay={true}
+          infiniteLoop={true}
+        >
+          {[1, 2, 3, 4].map((promo) => (
+            <div key={promo}>
+              <img
+                src={`https://via.placeholder.com/960x240.png?text=Promo${promo}`}
+                alt={promo}
+              />
+            </div>
+          ))}
         </Carousel>
-        <div className={classes.gridRoot}>
-          <GridList className={classes.gridList} cols={2.5}>
-            {tileData.map((tile) => (
-              <GridListTile key={tile.img}>
-                <img src={tile.img} alt={tile.gridTitle} />
+        <Paper className={classes.recommRoot}>
+          <Typography variant="subtitle1">Recommended for you...</Typography>
+          <GridList
+            className={classes.recommList}
+            cols={recommNo}
+            cellHeight={isSmall ? 120 : 180}
+          >
+            {recomms.map((tile) => (
+              <GridListTile
+                key={tile}
+                classes={{
+                  root: classes.recommTileFrame,
+                  tile: classes.recommTile,
+                }}
+              >
+                {loading ? (
+                  <Skeleton
+                    variant="rect"
+                    width={isSmall ? 120 : 180}
+                    height={isSmall ? 120 : 180}
+                  />
+                ) : (
+                  <img
+                    src={`https://via.placeholder.com/${isSmall ? 120 : 180}x${
+                      isSmall ? 120 : 180
+                    }.png?text=Recomm${tile}`}
+                    alt={tile}
+                  />
+                )}
                 <GridListTileBar
-                  title={tile.gridTitle}
-                  classes={{
-                    root: classes.titleBar,
-                    title: classes.gridTitle,
-                  }}
+                  title={
+                    <Typography variant="caption">{`Buy now only for $1.00`}</Typography>
+                  }
                   actionIcon={
-                    <IconButton aria-label={`star ${tile.title}`}>
-                      <StarBorderIcon className={classes.gridTitle} />
+                    <IconButton
+                      aria-label={`info about ${tile.title}`}
+                      style={{
+                        color: 'rgba(255, 255, 255, 0.54)',
+                      }}
+                    >
+                      <InfoIcon />
                     </IconButton>
                   }
                 />
               </GridListTile>
             ))}
           </GridList>
-        </div>
+        </Paper>
+        <Paper className={classes.catRoot}>
+          <Typography variant="subtitle1">Other categories...</Typography>
+          <GridList
+            cols={recommNo}
+            rows={2}
+            cellHeight={isSmall ? 120 : 180}
+            className={classes.catTileFrame}
+          >
+            {cats.map((tile) => (
+              <GridListTile
+                key={tile}
+                classes={{
+                  root: classes.catTileFrame,
+                  tile: classes.catTile,
+                }}
+              >
+                <img
+                  src={`https://via.placeholder.com/${isSmall ? 120 : 180}x${
+                    isSmall ? 120 : 180
+                  }.png?text=Cat${tile}`}
+                  alt={tile}
+                />
+                <GridListTileBar
+                  title={
+                    <Typography variant="caption">{`Click to browse Cat${tile}s!`}</Typography>
+                  }
+                  actionIcon={
+                    <IconButton
+                      aria-label={`info about ${tile.title}`}
+                      style={{
+                        color: 'rgba(255, 255, 255, 0.54)',
+                      }}
+                    >
+                      <ArrowForwardIosIcon />
+                    </IconButton>
+                  }
+                />
+              </GridListTile>
+            ))}
+          </GridList>
+        </Paper>
       </Container>
     </ThemeProvider>
   );
