@@ -21,6 +21,7 @@ import {
   Paper,
   GridListTile,
   GridListTileBar,
+  Link,
 } from '@material-ui/core';
 
 import { Container, createMuiTheme, ThemeProvider } from '@material-ui/core';
@@ -111,7 +112,6 @@ export default function Main(props) {
     gridRoot: {
       display: 'flex',
       flexWrap: 'wrap',
-      justifyContent: 'space-around',
       overflow: 'hidden',
       backgroundColor: theme.palette.background.paper,
     },
@@ -140,7 +140,7 @@ export default function Main(props) {
       marginBottom: theme.spacing(2),
     },
     catTileFrame: {
-      justifyContent: 'space-around',
+      justifyContent: 'flex-start',
       width: 'auto !important',
     },
     catTile: {
@@ -314,6 +314,9 @@ export default function Main(props) {
               </GridListTile>
             ))}
           </GridList>
+          <Typography variant="subtitle2" align="right">
+            <Link href="#" color="inherit">{`Click to browse more...`}</Link>
+          </Typography>
         </Paper>
       </Container>
     </ThemeProvider>
