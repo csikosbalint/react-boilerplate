@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
+import usePromise from 'react-promise-suspense';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -177,9 +178,31 @@ export default function Main(props) {
   }
   let cats = [...recomms];
 
+  const LazyNews = lazy(() => {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(import('../components/News')), 2000);
+    });
+  });
+
+  const Things = () => {
+    const data = usePromise(
+      () =>
+        fetch(
+          'http://slowwly.robertomurray.co.uk/delay/6000/url/http://dq3kw.mocklab.io/json/1'
+        ).then((res) => res.json()),
+      []
+    );
+    return (
+      <Typography variant="h6" style={{ margin: '1rem' }}>
+        {data.value}
+      </Typography>
+    );
+  };
+
   return (
     <ThemeProvider theme={themeMui}>
       <Container maxWidth="lg" className={classes.container}>
+        <p>Container</p>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
             <IconButton
@@ -190,9 +213,29 @@ export default function Main(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.menuTitle}>
-              {loading ? <Skeleton width="50px" /> : 'News'}
-            </Typography>
+            <Suspense
+              fallback={
+                <Skeleton
+                  width="50px"
+                  height="25px"
+                  style={{ margin: '1rem' }}
+                />
+              }
+            >
+              <LazyNews />
+            </Suspense>
+
+            <Suspense
+              fallback={
+                <Skeleton
+                  width="50px"
+                  height="25px"
+                  style={{ margin: '1rem' }}
+                />
+              }
+            >
+              <Things />
+            </Suspense>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
